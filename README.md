@@ -22,6 +22,7 @@ ISA Server | TMG - *Updated*
 
 Untested Modules (16)
 ----------------
+ModSecurity
 DenyAll 
 Hyperguard 
 Teros 
@@ -33,11 +34,10 @@ Jiasule-WAF
 Profense 
 TrafficShield
 Radware
-ModSecurity
 PaloAlto
 Knownsec
 DotDefender
-kona
+Kona
 
 
 Contributors

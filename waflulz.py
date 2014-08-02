@@ -29,10 +29,11 @@ print '###################### WAF detection tool ########################'
 print '########## Written by Tony Turner | GuidePoint Security ##########'
 print '##################################################################'
 #define argparse options
-parser = argparse.ArgumentParser(usage='%(prog)s -u [url] -n [normal] -a [aggressive] -r [recon]', description='waflulz accepts host input and will attempt to fingerprint any WAF in use')
+parser = argparse.ArgumentParser(usage='%(prog)s -u [url] -n [normal] -ms [modsecurity] -a [aggressive] -r [recon]', description='waflulz accepts host input and will attempt to fingerprint any WAF in use')
 parser.add_argument('-u','--url', help='python waflulz.py -u http://example.com', required=True)
 parser.add_argument('-r','--recon', help='This is recon mode, where no traffic is sent to target', action='store_true')
 parser.add_argument('-n','--normal', help='This is the normal mode, where no malicious requests are sent to server', action='store_true')
+parser.add_argument('-ms','--modsecurity', help='This is the ModSecurity detection mode, where semi-malicious requests are sent to server', action='store_true')
 parser.add_argument('-a','--aggressive', help='This is the aggressive mode, where malicious requests are sent to server to invoke WAF response', action='store_true')
 parser.add_argument('-ua','--useragent', help='Define useragent string. Default is Firefox. Specify one of the following values: firefox, chrome, ie6, ie10, safari, android, bing (for bingbot), google (for googlebot)', default='firefox')
 #parser.add_argument('-c','--cookie', help='Set-cookie for authenticated fingerprinting')
@@ -97,6 +98,7 @@ def requestsNormal():
 	print '------------------------------------------------------------------'
 	print ('The response code from ' + str(url) + ' is ' + str(r.status_code))
 	print ('The set-cookie response from ' + str(url) + ' is: ')
+	print 'Normal Mode does not detect the following WAFs without additional confirmation: ModSecurity'
 	try:
 		print r.headers['set-cookie']
 	except:
@@ -109,6 +111,7 @@ def requestsNormal():
 	return r
 
 
+
 '''
 Logic for Aggressive Fingerprint
 '''
@@ -116,9 +119,7 @@ def requestsAggressive():
 	try:
 		f = open("payloads.txt", 'r')
 		for line in f.readlines()[1:]:
-			#urlM = url + '?' + line
-			#below line specifically checks for modsecurity
-			urlM = url + '/?id=http?'
+			urlM = url + '?' + line
 			if (args.proxy):
 				ra = requests.get(urlM, proxies=proxylist, headers=headers)
 				print 'USING PROXY MODE'
@@ -144,6 +145,43 @@ def requestsAggressive():
 	except IOError:
 		print "Aggressive mode failed, re-run in Normal mode"
 
+
+'''
+Logic for ModSecurity Fingerprint
+
+'''
+
+def requestsMS():
+	try:
+		f = open("payloads.txt", 'rMS')
+		for line in f.readlines()[1:]:
+			#below line specifically checks for modsecurity
+			urlMS = url + '/?id=http?'
+			if (args.proxy):
+				rMS = requests.get(urlMS, proxies=proxylist, headers=headers)
+				print 'USING PROXY MODE'
+			else:
+				rMS = requests.get(urlMS, headers=headers)
+				print '------------------------------------------------------------------'
+				print ('Currently testing path ' + colorgrn.format(urlMS))
+				print ('The response code from ' + str(urlMS) + ' is ' + str(rMS.status_code))
+				if rMS.status_code is not 200:
+					print ('The response text is ' + rMS.text)
+				print ('The set-cookie response is: ')
+				try:
+					print rMS.headers['set-cookie']
+				except:
+					print ('There was no cookie set')
+				try:
+					print ('The server response is ' + rMS.headers['server'])
+				except:
+					print ('The server header does not exist')
+					print '------------------------------------------------------------------'
+			return rMS
+			f.close()
+	except IOError:
+		print "Aggressive mode failed, re-run in Normal mode"
+
 if (args.verbose):
 	logging.basicConfig(level=logging.INFO)
 	httplib.HTTPConnection.debuglevel = 1
@@ -165,6 +203,11 @@ elif (args.normal):
 	safe.safePlugins(r)
 	partial.partialPlugins(r)
 	untested.untestedPlugins(r)
+elif (args.modsecurity):	
+	rMS = requestsMS()
+	safe.safePlugins(rMS)
+	partial.partialPlugins(rMS)
+	untested.untestedPlugins(rMS)
 elif (args.aggressive):
 	ra = requestsAggressive()
 	safe.safePlugins(ra)
