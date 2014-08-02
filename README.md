@@ -6,6 +6,8 @@ Additionally completely passive recon capabilities have been included to fingerp
 
 Currently, normal, modsecurity and aggressive modes are enabled, however aggressive mode fingerprints are still a work in progress.
 
+Python-Requests is REQUIRED for usage. Install with $ pip install requests or $ easy_install requests
+
 Known Working Modules (9)
 ---------------------
 Incapsula
