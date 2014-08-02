@@ -180,7 +180,7 @@ def requestsMS():
 			return rMS
 			f.close()
 	except IOError:
-		print "Aggressive mode failed, re-run in Normal mode"
+		print "ModSec mode failed, re-run in Normal mode"
 
 if (args.verbose):
 	logging.basicConfig(level=logging.INFO)
