@@ -2,7 +2,9 @@ WAFlulz is a work in progress starting with Web Application Firewall (WAF) recon
 
 WAFlulz includes a proxy randomization function, but you will need to populate the httpproxy and httpsproxy text files with your own selection of proxies using the format shown there. We do not endorse the proxies listed currently, these were just ones that were used for initial testing based on the HMA lists.
 
-Currently, normal and aggressive modes are enabled, however aggressive mode fingerprints are still a work in progress.
+Additionally completely passive recon capabilities have been included to fingerprint WAFs without sending any traffic to them. Several User-Agent choices are also available to choose from, including mobile browsers.
+
+Currently, normal, modsecurity and aggressive modes are enabled, however aggressive mode fingerprints are still a work in progress.
 
 Known Working Modules (9)
 ---------------------
