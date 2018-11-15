@@ -5,7 +5,7 @@ def fingerprint(req):
 	#instantiate product
 	product = None
 	#Do headers exist?
-	print req.headers
+	#print req.headers
 	if 'set-cookie' in req.headers:
 		retval = re.search(r"X-dotDefender-denied", req.headers['set-cookie'])
 	else:
