@@ -10,6 +10,7 @@ import logging
 import urllib2
 import httplib
 import re
+import os 
 #3rd party modules
 import requests
 import tldextract
@@ -117,7 +118,7 @@ Logic for Aggressive Fingerprint
 '''
 def requestsAggressive():
 	try:
-		f = open("payloads.txt", 'r')
+		f = open(os.path.join(os.getcwd() , "payloads.txt"), 'r')
 		for line in f.readlines()[1:]:
 			urlM = url + '?' + line
 			if (args.proxy):
@@ -153,7 +154,7 @@ Logic for ModSecurity Fingerprint
 
 def requestsMS():
 	try:
-		f = open("payloads.txt", 'rMS')
+		f = open(os.path.join(os.getcwd() , "payloads.txt"), 'rMS')
 		for line in f.readlines()[1:]:
 			#below line specifically checks for modsecurity
 			urlMS = url + '/?id=http?'
