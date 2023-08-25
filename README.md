@@ -1,3 +1,9 @@
+# Warning - Edited 230825
+
+This project is not actively maintained and was first authored in 2004. It was originally written for Python 2.7 and has not been updated to 3.x at this time. Please make sure you test before using on live assessments as there are no guarantees and no support for this project at the time of this edit in 2023. 
+
+# Project Description
+
 WAFlulz is a work in progress starting with Web Application Firewall (WAF) recon, with plans to move on to mapping and exploitation. Currently only WAF detection functionality is included. Most regex's for detection modules came from the sqlmap source for --identify-waf option. Some additional plugins or modifications have been done.
 
 WAFlulz includes a proxy randomization function, but you will need to populate the httpproxy and httpsproxy text files with your own selection of proxies using the format shown there. We do not endorse the proxies listed currently, these were just ones that were used for initial testing based on the HMA lists.
